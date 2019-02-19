@@ -82,7 +82,7 @@ server.put('/api/zoos/:id', async (req, res) => {
   } catch (error) {}
 });
 
-// remove zoos (inactivate the zoo)
+// remove zoos 
 server.delete('/api/zoos/:id', async (req, res) => {
   try {
     const count = await db('zoos')
