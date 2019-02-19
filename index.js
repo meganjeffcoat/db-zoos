@@ -44,7 +44,7 @@ server.get('/api/zoos/:id', async (req, res) => {
 });
 
 const errors = {
-  '19': 'Another record with that value exists',
+  '19': 'Another zoo with that name exists',
 };
 
 // create zoos
@@ -52,7 +52,7 @@ server.post('/api/zoos', async (req, res) => {
   try {
     const [id] = await db('zoos').insert(req.body);
 
-    const role = await db('zoos')
+    const zoo = await db('zoos')
       .where({ id })
       .first();
 
@@ -61,6 +61,40 @@ server.post('/api/zoos', async (req, res) => {
     const message = errors[error.errno] || 'We ran into an error';
     res.status(500).json({ message, error });
   }
+});
+
+// update zoos
+server.put('/api/zoos/:id', async (req, res) => {
+  try {
+    const count = await db('zoos')
+      .where({ id: req.params.id })
+      .update(req.body);
+
+    if (count > 0) {
+      const zoo = await db('zoos')
+        .where({ id: req.params.id })
+        .first();
+
+      res.status(200).json(zoo);
+    } else {
+      res.status(404).json({ message: 'Records not found' });
+    }
+  } catch (error) {}
+});
+
+// remove zoos (inactivate the zoo)
+server.delete('/api/zoos/:id', async (req, res) => {
+  try {
+    const count = await db('zoos')
+      .where({ id: req.params.id })
+      .del();
+
+    if (count > 0) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: 'Records not found' });
+    }
+  } catch (error) {}
 });
 
 const port = 3300;
