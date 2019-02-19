@@ -97,6 +97,80 @@ server.delete('/api/zoos/:id', async (req, res) => {
   } catch (error) {}
 });
 
+///BEARS
+
+// list all bears
+server.get('/api/bears', async (req, res) => {
+  try {
+    const bears = await db('bears'); 
+    res.status(200).json(bears);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// list a bear by id
+server.get('/api/bears/:id', async (req, res) => {
+  try {
+    const bear = await db('bears')
+      .where({ id: req.params.id })
+      .first();
+    res.status(200).json(bear);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+// create bears
+server.post('/api/bears', async (req, res) => {
+  try {
+    const [id] = await db('bears').insert(req.body);
+
+    const bear = await db('bears')
+      .where({ id })
+      .first();
+
+    res.status(201).json(bear);
+  } catch (error) {
+    res.status(500).json({ message: 'Bear not found' });
+  }
+});
+
+// update bears
+server.put('/api/bears/:id', async (req, res) => {
+  try {
+    const count = await db('bears')
+      .where({ id: req.params.id })
+      .update(req.body);
+
+    if (count > 0) {
+      const bear = await db('bears')
+        .where({ id: req.params.id })
+        .first();
+
+      res.status(200).json(bear);
+    } else {
+      res.status(404).json({ message: 'Records not found' });
+    }
+  } catch (error) {}
+});
+
+// remove bears 
+server.delete('/api/bears/:id', async (req, res) => {
+  try {
+    const count = await db('bears')
+      .where({ id: req.params.id })
+      .del();
+
+    if (count > 0) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: 'Records not found' });
+    }
+  } catch (error) {}
+});
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
