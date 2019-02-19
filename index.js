@@ -100,7 +100,7 @@ server.delete('/api/zoos/:id', async (req, res) => {
 ///BEARS
 
 // list all bears
-server.get('/api/bears', async (req, res) => {
+server.get('/api/zoos/:id/bears', async (req, res) => {
   try {
     const bears = await db('bears'); 
     res.status(200).json(bears);
@@ -110,7 +110,7 @@ server.get('/api/bears', async (req, res) => {
 });
 
 // list a bear by id
-server.get('/api/bears/:id', async (req, res) => {
+server.get('/api/zoos/:id/bears/:id', async (req, res) => {
   try {
     const bear = await db('bears')
       .where({ id: req.params.id })
@@ -123,7 +123,7 @@ server.get('/api/bears/:id', async (req, res) => {
 
 
 // create bears
-server.post('/api/bears', async (req, res) => {
+server.post('/api/zoos/:id/bears', async (req, res) => {
   try {
     const [id] = await db('bears').insert(req.body);
 
@@ -138,7 +138,7 @@ server.post('/api/bears', async (req, res) => {
 });
 
 // update bears
-server.put('/api/bears/:id', async (req, res) => {
+server.put('/api/zoos/:id/bears/:id', async (req, res) => {
   try {
     const count = await db('bears')
       .where({ id: req.params.id })
@@ -157,7 +157,7 @@ server.put('/api/bears/:id', async (req, res) => {
 });
 
 // remove bears 
-server.delete('/api/bears/:id', async (req, res) => {
+server.delete('/api/zoos/:id/bears/:id', async (req, res) => {
   try {
     const count = await db('bears')
       .where({ id: req.params.id })
